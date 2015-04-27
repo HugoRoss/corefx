@@ -21,19 +21,20 @@ namespace System.IO
 
             Contract.Requires(path != null);
 
-            foreach (char c in path)
-            {
-                // Note: Same as Path.InvalidPathChars, unrolled here for performance
-                if (c == '\"' || c == '<' || c == '>' || c == '|' || c < 32)
-                    return true;
-
-                // used when path cannot contain search strings.
-                if (checkAdditional &&
-                    (c == '?' || c == '*'))
-                    return true;
+            if (checkAdditional) {
+                foreach (char c in path) {
+                    // Note: Same as Path.InvalidPathChars (plus '?' and '*'), unrolled here for performance
+                    if (c == '\"' || c == '<' || c == '>' || c == '|' || c == '?' || c == '*' || c < 32)
+                        return true;
+                }
+            } else {
+                foreach (char c in path) {
+                    // Note: Same as Path.InvalidPathChars, unrolled here for performance
+                    if (c == '\"' || c == '<' || c == '>' || c == '|' || c < 32)
+                        return true;
+                }
             }
-
-            return false;
+           return false;
         }
     }
 }
